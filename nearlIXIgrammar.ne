@@ -46,14 +46,14 @@ Statement ->
                                   }
                                   %}
           | Agent _ Operator _ Name {%
-                                      function(d) {
-                                        return {
-                                          agentName: d[0],
-                                          operator: d[2],
-                                          effect: d[4]
-                                        };
-                                      }
-                                      %}
+                                    function(d) {
+                                      return {
+                                        agentName: d[0],
+                                        operator: d[2],
+                                        effect: d[4]
+                                      };
+                                    }
+                                    %}
 
 Agent -> Name {% id %}
 
@@ -62,7 +62,7 @@ Mode ->
      | Percussive {% id %}
      | Concrete {% id %}
 
-Melodic -> Name %lbrack [0-9 ]:+ %rbrack PostScoreOperator {%
+Melodic -> Name %lbrack [0-9 ]:+ %rbrack PostScoreOperator  {%
                                                             function(d) {
                                                               return{
                                                                 scoreType: "Melodic",
@@ -71,17 +71,17 @@ Melodic -> Name %lbrack [0-9 ]:+ %rbrack PostScoreOperator {%
                                                                 postScoreOperator: d[4] //
                                                               };
                                                             }
-                                                           %}
+                                                            %}
 
-Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe PostScoreOperator{%
-                                                          function(d) {
-                                                            return{
-                                                              scoreType: "Percussive",
-                                                              score:  d[1].join(),
-                                                              postScoreOperator: d[3] //
-                                                            };
-                                                          }
-                                                          %}
+Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe PostScoreOperator  {%
+                                                            function(d) {
+                                                              return{
+                                                                scoreType: "Percussive",
+                                                                score:  d[1].join(),
+                                                                postScoreOperator: d[3] //
+                                                              };
+                                                            }
+                                                            %}
 
 Concrete -> Name %lbrace [0-9 ]:+ %rbrace PostScoreOperator {%
                                                             function(d) {
