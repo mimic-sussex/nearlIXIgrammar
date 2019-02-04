@@ -33,26 +33,26 @@ const lexer = moo.compile({
 var grammar = {
     Lexer: lexer,
     ParserRules: [
-    {"name": "main", "symbols": ["_", "Statement", "_"], "postprocess": function(d) {return d[0]; }},
+    {"name": "main", "symbols": ["_", "Statement", "_"]},
     {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", "Mode"], "postprocess": 
         function(d) {
           return {
             agentName: d[0],
-            operator: d[1],
-            effect: d[2]
+            operator: d[2],
+            mode: d[4]
           };
         }
         },
-    {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", (lexer.has("functionkeyword") ? {type: "functionkeyword"} : functionkeyword)], "postprocess": 
+    {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", "Name"], "postprocess": 
         function(d) {
           return {
             agentName: d[0],
-            operator: d[1],
-            effect: d[2]
+            operator: d[2],
+            effect: d[4]
           };
         }
         },
-    {"name": "Agent", "symbols": ["Name"], "postprocess": function(d) {return "yay!"; }},
+    {"name": "Agent", "symbols": ["Name"], "postprocess": id},
     {"name": "Mode", "symbols": ["Melodic"], "postprocess": id},
     {"name": "Mode", "symbols": ["Percussive"], "postprocess": id},
     {"name": "Mode", "symbols": ["Concrete"], "postprocess": id},
@@ -67,7 +67,7 @@ var grammar = {
             postScoreOperator: d[4] //
           };
         }
-        },
+                                                                   },
     {"name": "Percussive$ebnf$1", "symbols": [/[a-zA-Z0-9 ]/]},
     {"name": "Percussive$ebnf$1", "symbols": ["Percussive$ebnf$1", /[a-zA-Z0-9 ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "Percussive", "symbols": [(lexer.has("pipe") ? {type: "pipe"} : pipe), "Percussive$ebnf$1", (lexer.has("pipe") ? {type: "pipe"} : pipe), "PostScoreOperator"], "postprocess": 
@@ -92,17 +92,17 @@ var grammar = {
           };
         }
         },
-    {"name": "Name", "symbols": [(lexer.has("functionname") ? {type: "functionname"} : functionname)]},
-    {"name": "Name", "symbols": [(lexer.has("functionkeyword") ? {type: "functionkeyword"} : functionkeyword)]},
+    {"name": "Name", "symbols": [(lexer.has("functionname") ? {type: "functionname"} : functionname)], "postprocess": id},
+    {"name": "Name", "symbols": [(lexer.has("functionkeyword") ? {type: "functionkeyword"} : functionkeyword)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("assign") ? {type: "assign"} : assign)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("effectin") ? {type: "effectin"} : effectin)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("effectout") ? {type: "effectout"} : effectout)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("ampmore") ? {type: "ampmore"} : ampmore)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("ampless") ? {type: "ampless"} : ampless)], "postprocess": id},
-    {"name": "PostScoreOperator", "symbols": [(lexer.has("silence") ? {type: "silence"} : silence)]},
-    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpmore") ? {type: "transpmore"} : transpmore)]},
-    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpless") ? {type: "transpless"} : transpless)]},
-    {"name": "PostScoreOperator", "symbols": [(lexer.has("mult") ? {type: "mult"} : mult)]},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("silence") ? {type: "silence"} : silence)], "postprocess": id},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpmore") ? {type: "transpmore"} : transpmore)], "postprocess": id},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpless") ? {type: "transpless"} : transpless)], "postprocess": id},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("mult") ? {type: "mult"} : mult)], "postprocess": id},
     {"name": "PostScoreOperator", "symbols": []},
     {"name": "_$ebnf$1", "symbols": []},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", "wschar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
