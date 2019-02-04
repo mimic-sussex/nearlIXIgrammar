@@ -1,4 +1,4 @@
-# eppgrammar
+# NearlIXIgrammar
 
 
 Compile nearlIXIgrammar files to a JavaScript module
