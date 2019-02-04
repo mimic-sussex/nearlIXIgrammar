@@ -63,7 +63,7 @@ var grammar = {
           return{
             scoreType: "Melodic",
             instrument: d[0],
-            score:  d[2],
+            score:  d[2].join(),
             postScoreOperator: d[4] //
           };
         }
@@ -74,9 +74,8 @@ var grammar = {
         function(d) {
           return{
             scoreType: "Percussive",
-            instrument: d[0],
-            score:  d[2],
-            postScoreOperator: d[4] //
+            score:  d[1].join(),
+            postScoreOperator: d[3] //
           };
         }
         },
@@ -87,7 +86,7 @@ var grammar = {
           return{
             scoreType: "Concrete",
             instrument: d[0],
-            score:  d[2],
+            score:  d[2].join(),
             postScoreOperator: d[4] //
           };
         }
