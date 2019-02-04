@@ -37,21 +37,22 @@ main -> _ Statement _
 
 Statement -> Agent _ Operator _ Mode
 
-Agent ->
-    %functionname
-    | %functionkeyword
-
+Agent -> Name
 
 Mode ->
-  Melodic
-  | Percussive
-  | Concrete
+  Melodic {% id %}
+  | Percussive {% id %}
+  | Concrete {% id %}
 
-Melodic -> %lbrack  [a-zA-Z ]:+ %rbrack {% function(d) {return d[0] + d[1] + d[2]; } %}
+Melodic -> Name %lbrack  [a-zA-Z ]:+ %rbrack {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
 
-Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe {% function(d) {return d[0] + d[1] + d[2]; } %}
+Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
 
-Concrete -> %lbrace [0-9 ]:+ %rbrace {% function(d) {return d[0] + d[1] + d[2]; } %}
+Concrete -> Name %lbrace [0-9 ]:+ %rbrace {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
+
+Name ->
+    %functionname
+    | %functionkeyword
 
 Operator ->
   %assign {% id %}
