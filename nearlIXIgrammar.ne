@@ -4,7 +4,7 @@ const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
   functionkeyword: ['sinosc', 'phasor', 'adsr', 'filter', 'samp'],
-  functionname: /[a-zA-Z][a-zA-Z0-9]*?/,
+  functionname: /[a-zA-Z0-9]+?/,
   number: /[-+]?[0-9]*?\.[0-9]+?/,
   ws: {match: /\s+/, lineBreaks: true},
   lparen: /\(/,
@@ -34,7 +34,11 @@ const lexer = moo.compile({
 # Pass your lexer object using the @lexer option
 @lexer lexer
 
-main -> _ Mode _
+main -> _ Statement _
+
+Statement -> Agent _ Operator _ Mode
+
+Agent -> %functionname {% function(d) {return d[0]} %}
 
 Mode ->
   Melodic
@@ -54,16 +58,11 @@ Operator ->
   | %ampmore
   | %ampless
 
-
-# Assign
-|
-
 PostScoreOperator ->
-
-
-
-
-
+  %silence
+  | %transpmore
+  | %transpless
+  | %mult
 
 
   # Whitespace

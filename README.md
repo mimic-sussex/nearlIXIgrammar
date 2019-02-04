@@ -8,7 +8,7 @@ $ nearleyc nearlIXIgrammar.ne -o nearlIXIprocessor.js
 
 Test eppprocessor against input
 ```
-$ nearley-test ./nearlIXIprocessor.js --input '|x xo xox xox|'
+$ nearley-test ./nearlIXIprocessor.js --input 'perc1 -> |x xo xox xox|'
 ```
 
 Generate a railroad diagram for eppgrammar
