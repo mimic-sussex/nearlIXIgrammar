@@ -3,8 +3,8 @@
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
-  functionkeyword: ['sinosc', 'phasor', 'adsr', 'filter', 'samp'],
-  functionname: /[a-zA-Z0-9]+?/,
+  functionkeyword: ['doze', 'perk', 'nap', 'shake', 'swap', '>shift', 'shift<', 'inverse', 'expand', 'reverse'],
+  functionname: /[a-zA-Z][a-zA-Z0-9]*/,
   number: /[-+]?[0-9]*?\.[0-9]+?/,
   ws: {match: /\s+/, lineBreaks: true},
   lparen: /\(/,
@@ -25,11 +25,10 @@ const lexer = moo.compile({
   ampless: /\)\)/,
   silence: /!/,
   transpmore: /\+/,
-  transpless: /\-/,
-
-
+  transpless: /\-/
 });
 %}
+
 
 # Pass your lexer object using the @lexer option
 @lexer lexer
@@ -38,38 +37,41 @@ main -> _ Statement _
 
 Statement -> Agent _ Operator _ Mode
 
-Agent -> %functionname {% function(d) {return d[0]} %}
+Agent ->
+    %functionname
+    | %functionkeyword
+
 
 Mode ->
   Melodic
   | Percussive
   | Concrete
 
-Melodic -> %lbrack  "/[^a-zA-Z ]/" %rbrack {% function(d) {return d[0] + d[1] + d[2]; } %}
+Melodic -> %lbrack  [a-zA-Z ]:+ %rbrack {% function(d) {return d[0] + d[1] + d[2]; } %}
 
-Percussive -> %pipe "/[^a-zA-Z0-9 ]/"  %pipe {% function(d) {return d[0] + d[1] + d[2]; } %}
+Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe {% function(d) {return d[0] + d[1] + d[2]; } %}
 
-Concrete -> %lbrace "/[0-9 ]/" %rbrace {% function(d) {return d[0] + d[1] + d[2]; } %}
+Concrete -> %lbrace [0-9 ]:+ %rbrace {% function(d) {return d[0] + d[1] + d[2]; } %}
 
 Operator ->
-  %assign
-  | %effectin
-  | %effectout
-  | %ampmore
-  | %ampless
+  %assign {% id %}
+  | %effectin {% id %}
+  | %effectout {% id %}
+  | %ampmore {% id %}
+  | %ampless {% id %}
 
-PostScoreOperator ->
-  %silence
-  | %transpmore
-  | %transpless
-  | %mult
+# PostScoreOperator ->
+#   %silence
+#   | %transpmore
+#   | %transpless
+#   | %mult
 
 
   # Whitespace
-  _  -> wschar:* {% function(d) {return null;} %}
-  __ -> wschar:+ {% function(d) {return null;} %}
+_  -> wschar:* {% function(d) {return null;} %}
+__ -> wschar:+ {% function(d) {return null;} %}
 
-  wschar -> %ws {% id %}
+wschar -> %ws {% id %}
 
 
 
