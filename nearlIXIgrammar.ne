@@ -5,7 +5,7 @@ const moo = require("moo"); // this 'require' creates a node dependency
 const lexer = moo.compile({
   functionkeyword: ['doze', 'perk', 'nap', 'shake', 'swap', '>shift', 'shift<', 'inverse', 'expand', 'reverse'],
   functionname: /[a-zA-Z][a-zA-Z0-9]*/,
-  number: /[-+]?[0-9]*?\.[0-9]+?/,
+  number: /[-+]?[0-9]*\.?[0-9]+/,
   ws: {match: /\s+/, lineBreaks: true},
   lparen: /\(/,
   rparen: /\)/,
@@ -33,22 +33,67 @@ const lexer = moo.compile({
 # Pass your lexer object using the @lexer option
 @lexer lexer
 
-main -> _ Statement _
+main -> _ Statement _ {% function(d) {return d[0]; } %}
 
-Statement -> Agent _ Operator _ Mode
+Statement ->
+  Agent _ Operator _ Mode {%
+    function(d) {
+      return {
+        agentName: d[0],
+        operator: d[1],
+        effect: d[2]
+      };
+    }
+%}
+  | Agent _ Operator _ %functionkeyword {%
+    function(d) {
+      return {
+        agentName: d[0],
+        operator: d[1],
+        effect: d[2]
+      };
+    }
+%}
 
-Agent -> Name
+Agent -> Name {% function(d) {return "yay!"; } %}
 
 Mode ->
   Melodic {% id %}
   | Percussive {% id %}
   | Concrete {% id %}
 
-Melodic -> Name %lbrack  [a-zA-Z ]:+ %rbrack {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
+Melodic -> Name %lbrack [0-9 ]:+ %rbrack PostScoreOperator {%
+  function(d) {
+    return{
+      scoreType: "Melodic",
+      instrument: d[0],
+      score:  d[2],
+      postScoreOperator: d[4] //
+    };
+  }
+%}
 
-Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
+Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe PostScoreOperator{%
+  function(d) {
+    return{
+      scoreType: "Percussive",
+      instrument: d[0],
+      score:  d[2],
+      postScoreOperator: d[4] //
+    };
+  }
+%}
 
-Concrete -> Name %lbrace [0-9 ]:+ %rbrace {% function(d) {return d[0] + d[1] + d[2] + d[3];} %}
+Concrete -> Name %lbrace [0-9 ]:+ %rbrace PostScoreOperator {%
+  function(d) {
+    return{
+      scoreType: "Concrete",
+      instrument: d[0],
+      score:  d[2],
+      postScoreOperator: d[4] //
+    };
+  }
+%}
 
 Name ->
     %functionname
@@ -61,12 +106,12 @@ Operator ->
   | %ampmore {% id %}
   | %ampless {% id %}
 
-# PostScoreOperator ->
-#   %silence
-#   | %transpmore
-#   | %transpless
-#   | %mult
-
+PostScoreOperator ->
+  %silence
+  | %transpmore
+  | %transpless
+  | %mult
+  | null
 
   # Whitespace
 _  -> wschar:* {% function(d) {return null;} %}

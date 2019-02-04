@@ -8,7 +8,7 @@ const moo = require("moo"); // this 'require' creates a node dependency
 const lexer = moo.compile({
   functionkeyword: ['doze', 'perk', 'nap', 'shake', 'swap', '>shift', 'shift<', 'inverse', 'expand', 'reverse'],
   functionname: /[a-zA-Z][a-zA-Z0-9]*/,
-  number: /[-+]?[0-9]*?\.[0-9]+?/,
+  number: /[-+]?[0-9]*\.?[0-9]+/,
   ws: {match: /\s+/, lineBreaks: true},
   lparen: /\(/,
   rparen: /\)/,
@@ -33,21 +33,65 @@ const lexer = moo.compile({
 var grammar = {
     Lexer: lexer,
     ParserRules: [
-    {"name": "main", "symbols": ["_", "Statement", "_"]},
-    {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", "Mode"]},
-    {"name": "Agent", "symbols": ["Name"]},
+    {"name": "main", "symbols": ["_", "Statement", "_"], "postprocess": function(d) {return d[0]; }},
+    {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", "Mode"], "postprocess": 
+        function(d) {
+          return {
+            agentName: d[0],
+            operator: d[1],
+            effect: d[2]
+          };
+        }
+        },
+    {"name": "Statement", "symbols": ["Agent", "_", "Operator", "_", (lexer.has("functionkeyword") ? {type: "functionkeyword"} : functionkeyword)], "postprocess": 
+        function(d) {
+          return {
+            agentName: d[0],
+            operator: d[1],
+            effect: d[2]
+          };
+        }
+        },
+    {"name": "Agent", "symbols": ["Name"], "postprocess": function(d) {return "yay!"; }},
     {"name": "Mode", "symbols": ["Melodic"], "postprocess": id},
     {"name": "Mode", "symbols": ["Percussive"], "postprocess": id},
     {"name": "Mode", "symbols": ["Concrete"], "postprocess": id},
-    {"name": "Melodic$ebnf$1", "symbols": [/[a-zA-Z ]/]},
-    {"name": "Melodic$ebnf$1", "symbols": ["Melodic$ebnf$1", /[a-zA-Z ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "Melodic", "symbols": ["Name", (lexer.has("lbrack") ? {type: "lbrack"} : lbrack), "Melodic$ebnf$1", (lexer.has("rbrack") ? {type: "rbrack"} : rbrack)], "postprocess": function(d) {return d[0] + d[1] + d[2] + d[3];}},
+    {"name": "Melodic$ebnf$1", "symbols": [/[0-9 ]/]},
+    {"name": "Melodic$ebnf$1", "symbols": ["Melodic$ebnf$1", /[0-9 ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "Melodic", "symbols": ["Name", (lexer.has("lbrack") ? {type: "lbrack"} : lbrack), "Melodic$ebnf$1", (lexer.has("rbrack") ? {type: "rbrack"} : rbrack), "PostScoreOperator"], "postprocess": 
+        function(d) {
+          return{
+            scoreType: "Melodic",
+            instrument: d[0],
+            score:  d[2],
+            postScoreOperator: d[4] //
+          };
+        }
+        },
     {"name": "Percussive$ebnf$1", "symbols": [/[a-zA-Z0-9 ]/]},
     {"name": "Percussive$ebnf$1", "symbols": ["Percussive$ebnf$1", /[a-zA-Z0-9 ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "Percussive", "symbols": [(lexer.has("pipe") ? {type: "pipe"} : pipe), "Percussive$ebnf$1", (lexer.has("pipe") ? {type: "pipe"} : pipe)], "postprocess": function(d) {return d[0] + d[1] + d[2] + d[3];}},
+    {"name": "Percussive", "symbols": [(lexer.has("pipe") ? {type: "pipe"} : pipe), "Percussive$ebnf$1", (lexer.has("pipe") ? {type: "pipe"} : pipe), "PostScoreOperator"], "postprocess": 
+        function(d) {
+          return{
+            scoreType: "Percussive",
+            instrument: d[0],
+            score:  d[2],
+            postScoreOperator: d[4] //
+          };
+        }
+        },
     {"name": "Concrete$ebnf$1", "symbols": [/[0-9 ]/]},
     {"name": "Concrete$ebnf$1", "symbols": ["Concrete$ebnf$1", /[0-9 ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "Concrete", "symbols": ["Name", (lexer.has("lbrace") ? {type: "lbrace"} : lbrace), "Concrete$ebnf$1", (lexer.has("rbrace") ? {type: "rbrace"} : rbrace)], "postprocess": function(d) {return d[0] + d[1] + d[2] + d[3];}},
+    {"name": "Concrete", "symbols": ["Name", (lexer.has("lbrace") ? {type: "lbrace"} : lbrace), "Concrete$ebnf$1", (lexer.has("rbrace") ? {type: "rbrace"} : rbrace), "PostScoreOperator"], "postprocess": 
+        function(d) {
+          return{
+            scoreType: "Concrete",
+            instrument: d[0],
+            score:  d[2],
+            postScoreOperator: d[4] //
+          };
+        }
+        },
     {"name": "Name", "symbols": [(lexer.has("functionname") ? {type: "functionname"} : functionname)]},
     {"name": "Name", "symbols": [(lexer.has("functionkeyword") ? {type: "functionkeyword"} : functionkeyword)]},
     {"name": "Operator", "symbols": [(lexer.has("assign") ? {type: "assign"} : assign)], "postprocess": id},
@@ -55,6 +99,11 @@ var grammar = {
     {"name": "Operator", "symbols": [(lexer.has("effectout") ? {type: "effectout"} : effectout)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("ampmore") ? {type: "ampmore"} : ampmore)], "postprocess": id},
     {"name": "Operator", "symbols": [(lexer.has("ampless") ? {type: "ampless"} : ampless)], "postprocess": id},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("silence") ? {type: "silence"} : silence)]},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpmore") ? {type: "transpmore"} : transpmore)]},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("transpless") ? {type: "transpless"} : transpless)]},
+    {"name": "PostScoreOperator", "symbols": [(lexer.has("mult") ? {type: "mult"} : mult)]},
+    {"name": "PostScoreOperator", "symbols": []},
     {"name": "_$ebnf$1", "symbols": []},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", "wschar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "_", "symbols": ["_$ebnf$1"], "postprocess": function(d) {return null;}},
