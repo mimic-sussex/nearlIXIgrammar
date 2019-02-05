@@ -113,7 +113,7 @@ PostScoreOperator ->
                   | null
 
 # Whitespace
-_  -> wschar:* {% function(d) {return null;} %}
-__ -> wschar:+ {% function(d) {return null;} %}
+_  -> wschar:* {% nuller %}
+__ -> wschar:+ {% nuller %}
 
 wschar -> %ws {% id %}

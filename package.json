@@ -1,6 +1,17 @@
 {
+  "name": "nearlIXI",
+  "version": "1.0.0",
+  "description": "nearley-based grammar for the IXI language",
+  "main": "index.js",
+  "repository": "https://github.com/mimic-sussex/nearlIXIgrammar.git",
+  "author": "Francisco Bernardo <f.bernardo@sussex.ac.uk>",
+  "license": "MIT",
   "dependencies": {
     "moo": "^0.5.0",
     "nearley": "^2.16.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }
