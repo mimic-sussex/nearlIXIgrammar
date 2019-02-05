@@ -67,7 +67,7 @@ var grammar = {
             postScoreOperator: d[4] //
           };
         }
-                                                                   },
+        },
     {"name": "Percussive$ebnf$1", "symbols": [/[a-zA-Z0-9 ]/]},
     {"name": "Percussive$ebnf$1", "symbols": ["Percussive$ebnf$1", /[a-zA-Z0-9 ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "Percussive", "symbols": [(lexer.has("pipe") ? {type: "pipe"} : pipe), "Percussive$ebnf$1", (lexer.has("pipe") ? {type: "pipe"} : pipe), "PostScoreOperator"], "postprocess": 

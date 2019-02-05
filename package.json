@@ -10,7 +10,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "nearleyc nearlIXIgrammar.ne -o nearlIXIprocessor.js"
   },
   "dependencies": {
     "moo": "^0.5.0",
