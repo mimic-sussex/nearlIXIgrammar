@@ -6,6 +6,12 @@ Compile nearlIXIgrammar files to a JavaScript module
 $ nearleyc nearlIXIgrammar.ne -o nearlIXIprocessor.js
 ```
 
+Or use the build script
+```
+$ yarn build
+```
+
+
 Test nearlIXIprocessor against input
 ```
 $ nearley-test ./nearlIXIprocessor.js --input 'perc -> |x xo xox xox|'          # Percussive mode
@@ -20,12 +26,15 @@ Generate a railroad diagram for nearlIXIgrammar
 $ nearley-railroad nearlIXIgrammar.ne -o nearlIXIgrammar.html
 ```
 
-Run unit tests
+Run Node unit tests
 ```
-$ yarn run test
+$ yarn test
 ```
 
-
+Run browser-based unit tests
+```
+$ yarn test:browser
+```
 
 
 ## License
