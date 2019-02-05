@@ -20,6 +20,13 @@ Generate a railroad diagram for nearlIXIgrammar
 $ nearley-railroad nearlIXIgrammar.ne -o nearlIXIgrammar.html
 ```
 
+Run unit tests
+```
+$ yarn run test
+```
+
+
+
 
 ## License
 MIT
