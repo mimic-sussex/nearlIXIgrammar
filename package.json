@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "mocha",
+    "test:browser": "live-server --port=9000 --mount=/:public",
     "build": "nearleyc nearlIXIgrammar.ne -o nearlIXIprocessor.js"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "live-server": "^1.2.1",
     "mocha": "^5.2.0"
   }
 }
