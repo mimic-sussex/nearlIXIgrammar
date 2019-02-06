@@ -2,6 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should();
 const nearley = require("nearley");
+const moo = require("moo");
 const processor = require("../nearlIXIprocessor.js");
 
 

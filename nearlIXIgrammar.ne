@@ -1,5 +1,14 @@
 # Builtins make your parser slower. For efficiency, use lexer like Moo
+
+# https://github.com/no-context/moo/issues/113
+# suggests
+# include the moo JS file in your page, and then use `var moo = window.moo` in your Nearley grammar instead of require().
+# instead of
+# const moo = require("moo"); // this 'require' creates a node dependency
+
+
 @{%
+
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
@@ -67,7 +76,7 @@ Melodic -> Name %lbrack [0-9 ]:+ %rbrack PostScoreOperator  {%
                                                               return{
                                                                 scoreType: "Melodic",
                                                                 instrument: d[0],
-                                                                score:  d[2].join(),
+                                                                score: d[2].join(),
                                                                 postScoreOperator: d[4] //
                                                               };
                                                             }
@@ -77,7 +86,7 @@ Percussive -> %pipe [a-zA-Z0-9 ]:+ %pipe PostScoreOperator  {%
                                                             function(d) {
                                                               return{
                                                                 scoreType: "Percussive",
-                                                                score:  d[1].join(),
+                                                                score: d[1].join(),
                                                                 postScoreOperator: d[3] //
                                                               };
                                                             }
@@ -88,7 +97,7 @@ Concrete -> Name %lbrace [0-9 ]:+ %rbrace PostScoreOperator {%
                                                               return{
                                                                 scoreType: "Concrete",
                                                                 instrument: d[0],
-                                                                score:  d[2].join(),
+                                                                score: d[2].join(),
                                                                 postScoreOperator: d[4] //
                                                               };
                                                             }

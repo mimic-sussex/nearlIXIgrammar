@@ -3,6 +3,7 @@
 (function () {
 function id(x) { return x[0]; }
 
+
 const moo = require("moo"); // this 'require' creates a node dependency
 
 const lexer = moo.compile({
@@ -63,7 +64,7 @@ var grammar = {
           return{
             scoreType: "Melodic",
             instrument: d[0],
-            score:  d[2].join(),
+            score: d[2].join(),
             postScoreOperator: d[4] //
           };
         }
@@ -74,7 +75,7 @@ var grammar = {
         function(d) {
           return{
             scoreType: "Percussive",
-            score:  d[1].join(),
+            score: d[1].join(),
             postScoreOperator: d[3] //
           };
         }
@@ -86,7 +87,7 @@ var grammar = {
           return{
             scoreType: "Concrete",
             instrument: d[0],
-            score:  d[2].join(),
+            score: d[2].join(),
             postScoreOperator: d[4] //
           };
         }
