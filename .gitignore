@@ -3,3 +3,4 @@ package-lock.json
 yarn.lock
 /lerna-debug.log
 /build/**
+/build/bundle.js
