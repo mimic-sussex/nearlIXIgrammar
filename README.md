@@ -14,7 +14,7 @@ $ yarn build
 
 Test nearlIXIprocessor against input
 ```
-$ nearley-test ./nearlIXIprocessor.js --input 'percy -> |x xo xox xox|'          # Percussive mode
+$ nearley-test ./nearlIXIprocessor.js --input 'percy -> |x xo xox xox|'         # Percussive mode
 $ nearley-test ./nearlIXIprocessor.js --input 'mel -> fle[1 3 45 67 2]'         # Melodic mode
 $ nearley-test ./nearlIXIprocessor.js --input 'connie -> marimba{1 3 45 67 2}!' # Concréte mode with Silence Post-score Operator
 
